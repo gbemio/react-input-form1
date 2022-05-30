@@ -1,57 +1,88 @@
-import { useEffect, useState } from 'react';
-import React from 'react'
+import { useRef, useState } from "react";
+import "./App.css";
+import useRandomJoke from "./useRandomJoke";
 
 function App() {
-const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-const [name, setName] = useState("");
-
-// on every render
-useEffect(() => {
-console.log("I re-rendered");
-});
-
-// on first render/mount only! - componentDidMount alternative
-useEffect(() => {
-  console.log("The component mounted")
-}, []);
-
-// on first render + whenever dependency changes - componentDidUpdate alternative
-useEffect(() => {
-  console.log(`The name changed!: ${name}`);
-}, [name]);
-
-// Follows the same rules, except this handles the unmounting on a component! - componentWillUnmount alternateve
-useEffect(() => {
-  console.log("attach listener");
-  window.addEventListener("resize", updateWindowWidth);
-
-  return () => {
-    // when component unmounts, this cleanup code runs...
-console.log("detach listener");
-window.removeEventListener("resize", updateWindowWidth);
-
-
-  };
-});
-
-const updateWindowWidth = () => {
-setWindowWidth(window.innerWidth)
-};
-
+  const firstNameRef = useRef(null);
+  const lastNameRef = useRef(null);
+  const [firstName, setFirstName] = useState("Gbemi");
+  const [lastName, setLastName] = useState("Odukoya");
+  const joke = useRandomJoke(firstName, lastName);
+const generateJoke = e => {
+  e.preventDefault();
+  setFirstName(firstNameRef.current.value);
+  setLastName(lastNameRef.current.value);
+}
 
   return (
     <div className="app">
       <center>
-        <h1>The useEffect Hook</h1>
-        <h2>The window width is: {windowWidth}</h2>
+        <h1>The Joke Generator</h1>
+        <h2>{joke}</h2>
 
-        <input value={name} onChange={(e) => setName(e.target.value)} placeholder="Enter a name" />
+        <form>
+          <input placeholder="first name" ref={firstNameRef} />
+          <input placeholder="last name" ref={lastNameRef}/>
+          <button onClick={generateJoke}>Generate Joke</button>
+        </form>
       </center>
     </div>
-  );
-}
+  )};
 
-export default App
+export default App;
+
+// import { useEffect, useState } from 'react';
+// import React from 'react'
+
+// function App() {
+// const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+// const [name, setName] = useState("");
+
+// // on every render
+// useEffect(() => {
+// console.log("I re-rendered");
+// });
+
+// // on first render/mount only! - componentDidMount alternative
+// useEffect(() => {
+//   console.log("The component mounted")
+// }, []);
+
+// // on first render + whenever dependency changes - componentDidUpdate alternative
+// useEffect(() => {
+//   console.log(`The name changed!: ${name}`);
+// }, [name]);
+
+// // Follows the same rules, except this handles the unmounting on a component! - componentWillUnmount alternateve
+// useEffect(() => {
+//   console.log("attach listener");
+//   window.addEventListener("resize", updateWindowWidth);
+
+//   return () => {
+//     // when component unmounts, this cleanup code runs...
+// console.log("detach listener");
+// window.removeEventListener("resize", updateWindowWidth);
+//   };
+// });
+
+// const updateWindowWidth = () => {
+// setWindowWidth(window.innerWidth)
+// };
+
+
+//   return (
+//     <div className="app">
+//       <center>
+//         <h1>The useEffect Hook</h1>
+//         <h2>The window width is: {windowWidth}</h2>
+
+//         <input value={name} onChange={(e) => setName(e.target.value)} placeholder="Enter a name" />
+//       </center>
+//     </div>
+//   );
+// }
+
+// export default App
 
 
 
